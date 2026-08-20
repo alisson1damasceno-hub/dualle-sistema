@@ -2,6 +2,7 @@
 
 import { prisma } from '@/lib/prisma'
 import { revalidatePath } from 'next/cache'
+import { redirect } from 'next/navigation'
 
 export async function listarMateriasPrimas() {
   return await prisma.materiaPrima.findMany({
@@ -50,4 +51,5 @@ export async function atualizarMateriaPrima(id: string, formData: FormData) {
   })
 
   revalidatePath('/materias-primas')
+  redirect('/materias-primas')
 }

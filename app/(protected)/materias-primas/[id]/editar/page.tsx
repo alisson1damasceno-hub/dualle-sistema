@@ -1,5 +1,6 @@
 import { buscarMateriaPrimaPorId, atualizarMateriaPrima } from '../../actions'
 import { redirect } from 'next/navigation'
+import { BotaoSubmit } from './BotaoSubmit'
 
 export default async function EditarMateriaPrimaPage({
   params,
@@ -46,12 +47,7 @@ export default async function EditarMateriaPrimaPage({
             className="flex-1 px-4 py-3 rounded-xl border border-zinc-200 bg-white text-zinc-900 outline-none focus:ring-2 focus:ring-zinc-900"
           />
         </div>
-        <button
-          type="submit"
-          className="w-full py-3 rounded-xl bg-zinc-900 text-white font-medium"
-        >
-          Salvar alterações
-        </button>
+        <BotaoSubmit />
       </form>
     </div>
   )
