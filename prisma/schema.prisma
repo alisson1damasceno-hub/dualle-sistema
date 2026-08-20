@@ -1,0 +1,83 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../app/generated/prisma"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model Cliente {
+  id        String   @id @default(cuid())
+  nome      String
+  whatsapp  String?
+  instagram String?
+  canal     String?
+  criadoEm  DateTime @default(now())
+
+  pedidos Pedido[]
+}
+
+model MateriaPrima {
+  id            String   @id @default(cuid())
+  nome          String
+  unidade       String
+  precoUnitario Decimal
+  criadoEm     DateTime @default(now())
+  atualizadoEm DateTime @updatedAt
+
+  itensFicha ItemFicha[]
+}
+
+model Produto {
+  id          String   @id @default(cuid())
+  nome        String
+  categoria   String?
+  descricao   String?
+  margemLucro Decimal  @default(60)
+  ativo       Boolean  @default(true)
+  criadoEm   DateTime @default(now())
+
+  fichaTecnica ItemFicha[]
+  itensPedido  ItemPedido[]
+}
+
+model ItemFicha {
+  id             String       @id @default(cuid())
+  produto        Produto      @relation(fields: [produtoId], references: [id])
+  produtoId      String
+  materiaPrima   MateriaPrima @relation(fields: [materiaPrimaId], references: [id])
+  materiaPrimaId String
+  quantidade     Decimal
+
+  @@unique([produtoId, materiaPrimaId])
+}
+
+model Pedido {
+  id            String    @id @default(cuid())
+  cliente       Cliente?  @relation(fields: [clienteId], references: [id])
+  clienteId     String?
+  canal         String    @default("direto")
+  canalPedidoId String?
+  status        String    @default("aguardando")
+  prazo         DateTime?
+  pago          Boolean   @default(false)
+  observacoes   String?
+  criadoEm     DateTime  @default(now())
+  atualizadoEm DateTime  @updatedAt
+
+  itens ItemPedido[]
+}
+
+model ItemPedido {
+  id             String  @id @default(cuid())
+  pedido         Pedido  @relation(fields: [pedidoId], references: [id])
+  pedidoId       String
+  produto        Produto @relation(fields: [produtoId], references: [id])
+  produtoId      String
+  quantidade     Int
+  precoUnitario  Decimal
+  especificacoes String?
+}
