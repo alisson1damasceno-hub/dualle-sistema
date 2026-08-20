@@ -1,5 +1,6 @@
+import Link from 'next/link'
 import { listarMateriasPrimas, criarMateriaPrima, deletarMateriaPrima } from './actions'
-import { Trash2 } from 'lucide-react'
+import { Trash2, Pencil } from 'lucide-react'
 import type { MateriaPrimaModel as MateriaPrima } from '../../generated/prisma/models/MateriaPrima'
 
 export default async function MateriasPrimasPage() {
@@ -60,14 +61,22 @@ export default async function MateriasPrimasPage() {
                 {m.unidade} · R$ {Number(m.precoUnitario).toFixed(2)}
               </p>
             </div>
-            <form action={deletarMateriaPrima.bind(null, m.id)}>
-              <button
-                type="submit"
-                className="text-zinc-400 hover:text-red-500 transition-colors p-1"
+            <div className="flex gap-1">
+              <Link
+                href={`/materias-primas/${m.id}/editar`}
+                className="text-zinc-400 hover:text-zinc-900 transition-colors p-1"
               >
-                <Trash2 size={18} />
-              </button>
-            </form>
+                <Pencil size={18} />
+              </Link>
+              <form action={deletarMateriaPrima.bind(null, m.id)}>
+                <button
+                  type="submit"
+                  className="text-zinc-400 hover:text-red-500 transition-colors p-1"
+                >
+                  <Trash2 size={18} />
+                </button>
+              </form>
+            </div>
           </div>
         ))}
       </div>
