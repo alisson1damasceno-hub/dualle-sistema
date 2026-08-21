@@ -1,9 +1,10 @@
 import Link from 'next/link'
-import { Home, Package, ShoppingBag, Users } from 'lucide-react'
+import { Home, Package, ShoppingBag, Users, Box } from 'lucide-react'
 
 const navItems = [
   { href: '/dashboard', label: 'Início', icon: Home },
   { href: '/materias-primas', label: 'Materiais', icon: Package },
+  { href: '/produtos', label: 'Produtos', icon: Box },
   { href: '/pedidos', label: 'Pedidos', icon: ShoppingBag },
   { href: '/clientes', label: 'Clientes', icon: Users },
 ]
