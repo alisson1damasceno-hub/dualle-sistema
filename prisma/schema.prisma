@@ -15,6 +15,7 @@ model Cliente {
   whatsapp  String?
   instagram String?
   canal     String?
+  ativo     Boolean  @default(true)
   criadoEm  DateTime @default(now())
 
   pedidos Pedido[]
@@ -25,6 +26,7 @@ model MateriaPrima {
   nome          String
   unidade       String
   precoUnitario Decimal
+  ativo         Boolean  @default(true)
   criadoEm     DateTime @default(now())
   atualizadoEm DateTime @updatedAt
 

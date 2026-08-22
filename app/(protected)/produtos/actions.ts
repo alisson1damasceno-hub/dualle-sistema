@@ -58,9 +58,19 @@ export async function atualizarProduto(id: string, formData: FormData) {
   redirect('/produtos')
 }
 
-export async function deletarProduto(id: string) {
-  await prisma.produto.delete({
+export async function inativarProduto(id: string) {
+  await prisma.produto.update({
     where: { id },
+    data: { ativo: false },
+  })
+
+  revalidatePath('/produtos')
+}
+
+export async function reativarProduto(id: string) {
+  await prisma.produto.update({
+    where: { id },
+    data: { ativo: true },
   })
 
   revalidatePath('/produtos')

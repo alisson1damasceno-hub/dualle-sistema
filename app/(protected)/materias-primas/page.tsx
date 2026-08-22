@@ -1,10 +1,12 @@
 import Link from 'next/link'
-import { listarMateriasPrimas, criarMateriaPrima, deletarMateriaPrima } from './actions'
-import { Trash2, Pencil } from 'lucide-react'
+import { listarMateriasPrimas, criarMateriaPrima, inativarMateriaPrima, reativarMateriaPrima } from './actions'
+import { Pencil, ArchiveX, ArchiveRestore } from 'lucide-react'
 import type { MateriaPrimaModel as MateriaPrima } from '../../generated/prisma/models/MateriaPrima'
 
 export default async function MateriasPrimasPage() {
-  const materias = await listarMateriasPrimas()
+  const todas = await listarMateriasPrimas()
+  const ativas = todas.filter((m: MateriaPrima) => m.ativo)
+  const inativas = todas.filter((m: MateriaPrima) => !m.ativo)
 
   return (
     <div className="p-6 space-y-6">
@@ -43,14 +45,14 @@ export default async function MateriasPrimasPage() {
         </button>
       </form>
 
-      {/* Lista */}
+      {/* Lista de ativas */}
       <div className="space-y-2">
-        {materias.length === 0 && (
+        {ativas.length === 0 && (
           <p className="text-sm text-zinc-400 text-center py-8">
-            Nenhuma matéria-prima cadastrada ainda.
+            Nenhuma matéria-prima ativa.
           </p>
         )}
-        {materias.map((m: MateriaPrima) => (
+        {ativas.map((m: MateriaPrima) => (
           <div
             key={m.id}
             className="flex items-center justify-between bg-white rounded-xl px-4 py-3 border border-zinc-200"
@@ -68,18 +70,52 @@ export default async function MateriasPrimasPage() {
               >
                 <Pencil size={18} />
               </Link>
-              <form action={deletarMateriaPrima.bind(null, m.id)}>
+              <form action={inativarMateriaPrima.bind(null, m.id)}>
                 <button
                   type="submit"
+                  title="Inativar matéria-prima"
                   className="text-zinc-400 hover:text-red-500 transition-colors p-1"
                 >
-                  <Trash2 size={18} />
+                  <ArchiveX size={18} />
                 </button>
               </form>
             </div>
           </div>
         ))}
       </div>
+
+      {/* Seção de inativas */}
+      {inativas.length > 0 && (
+        <div>
+          <h2 className="text-sm font-semibold text-zinc-400 uppercase tracking-wide mb-3">
+            Inativas ({inativas.length})
+          </h2>
+          <div className="space-y-2">
+            {inativas.map((m: MateriaPrima) => (
+              <div
+                key={m.id}
+                className="flex items-center justify-between bg-white rounded-xl px-4 py-3 border border-zinc-200 opacity-50"
+              >
+                <div>
+                  <p className="font-medium text-zinc-900">{m.nome}</p>
+                  <p className="text-sm text-zinc-500">
+                    {m.unidade} · R$ {Number(m.precoUnitario).toFixed(2)}
+                  </p>
+                </div>
+                <form action={reativarMateriaPrima.bind(null, m.id)}>
+                  <button
+                    type="submit"
+                    title="Reativar matéria-prima"
+                    className="text-zinc-400 hover:text-green-500 transition-colors p-1"
+                  >
+                    <ArchiveRestore size={18} />
+                  </button>
+                </form>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   )
 }

@@ -24,9 +24,19 @@ export async function criarMateriaPrima(formData: FormData) {
   revalidatePath('/materias-primas')
 }
 
-export async function deletarMateriaPrima(id: string) {
-  await prisma.materiaPrima.delete({
+export async function inativarMateriaPrima(id: string) {
+  await prisma.materiaPrima.update({
     where: { id },
+    data: { ativo: false },
+  })
+
+  revalidatePath('/materias-primas')
+}
+
+export async function reativarMateriaPrima(id: string) {
+  await prisma.materiaPrima.update({
+    where: { id },
+    data: { ativo: true },
   })
 
   revalidatePath('/materias-primas')
