@@ -41,6 +41,8 @@ export async function atualizarProduto(id: string, formData: FormData) {
   const categoria = formData.get('categoria') as string
   const descricao = formData.get('descricao') as string
   const margemLucro = parseFloat(formData.get('margemLucro') as string)
+  const precoVendaRaw = formData.get('precoVenda') as string
+  const precoVenda = precoVendaRaw ? parseFloat(precoVendaRaw) : null
 
   if (!nome || isNaN(margemLucro)) return
 
@@ -51,6 +53,7 @@ export async function atualizarProduto(id: string, formData: FormData) {
       categoria: categoria || null,
       descricao: descricao || null,
       margemLucro,
+      precoVenda,
     },
   })
 
@@ -90,12 +93,16 @@ export async function adicionarItemFicha(produtoId: string, formData: FormData) 
 
   if (!materiaPrimaId || isNaN(quantidade) || quantidade <= 0) return
 
-  await prisma.itemFicha.create({
-    data: {
-      produtoId,
-      materiaPrimaId,
-      quantidade,
+  const jaExiste = await prisma.itemFicha.findUnique({
+    where: {
+      produtoId_materiaPrimaId: { produtoId, materiaPrimaId },
     },
+  })
+
+  if (jaExiste) return
+
+  await prisma.itemFicha.create({
+    data: { produtoId, materiaPrimaId, quantidade },
   })
 
   revalidatePath(`/produtos/${produtoId}/editar`)
