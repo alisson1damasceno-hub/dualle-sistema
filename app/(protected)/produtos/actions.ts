@@ -75,3 +75,36 @@ export async function reativarProduto(id: string) {
 
   revalidatePath('/produtos')
 }
+
+export async function listarItensFicha(produtoId: string) {
+  return await prisma.itemFicha.findMany({
+    where: { produtoId },
+    include: { materiaPrima: true },
+    orderBy: { materiaPrima: { nome: 'asc' } },
+  })
+}
+
+export async function adicionarItemFicha(produtoId: string, formData: FormData) {
+  const materiaPrimaId = formData.get('materiaPrimaId') as string
+  const quantidade = parseFloat(formData.get('quantidade') as string)
+
+  if (!materiaPrimaId || isNaN(quantidade) || quantidade <= 0) return
+
+  await prisma.itemFicha.create({
+    data: {
+      produtoId,
+      materiaPrimaId,
+      quantidade,
+    },
+  })
+
+  revalidatePath(`/produtos/${produtoId}/editar`)
+}
+
+export async function removerItemFicha(itemId: string, produtoId: string) {
+  await prisma.itemFicha.delete({
+    where: { id: itemId },
+  })
+
+  revalidatePath(`/produtos/${produtoId}/editar`)
+}

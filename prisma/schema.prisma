@@ -38,7 +38,8 @@ model Produto {
   nome        String
   categoria   String?
   descricao   String?
-  margemLucro Decimal  @default(60)
+  margemLucro Decimal  @default(30)
+  precoVenda  Decimal?
   ativo       Boolean  @default(true)
   criadoEm   DateTime @default(now())
 
