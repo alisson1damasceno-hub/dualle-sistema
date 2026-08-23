@@ -56,7 +56,12 @@ export default async function ClientesPage() {
             className="bg-white rounded-xl shadow p-4 flex items-start justify-between gap-2"
           >
             <div className="flex flex-col gap-1">
-              <span className="font-medium">{cliente.nome}</span>
+              <Link
+                href={`/clientes/${cliente.id}`}
+                className="font-medium hover:text-blue-600 transition-colors"
+              >
+                {cliente.nome}
+              </Link>
               {cliente.whatsapp && (
                 <span className="text-sm text-zinc-500">📱 {cliente.whatsapp}</span>
               )}

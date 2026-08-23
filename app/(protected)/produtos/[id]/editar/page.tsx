@@ -73,7 +73,7 @@ export default async function EditarProdutoPage({
           step="0.01"
           min="0"
           defaultValue={produto.precoVenda ? Number(produto.precoVenda) : ''}
-          placeholder="Preço de venda — opcional (sobrescreve o sugerido)"
+          placeholder="Preço de venda (R$)"
           className="w-full px-4 py-3 rounded-xl border border-zinc-200 bg-white text-zinc-900 outline-none focus:ring-2 focus:ring-zinc-900"
         />
         <BotaoSubmit />
