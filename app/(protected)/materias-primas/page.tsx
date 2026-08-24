@@ -20,7 +20,7 @@ export default async function MateriasPrimasPage() {
           required
           className="w-full px-4 py-3 rounded-xl border border-zinc-200 bg-white text-zinc-900 outline-none focus:ring-2 focus:ring-zinc-900"
         />
-        <div className="flex gap-2">
+        <div className="flex flex-col sm:flex-row gap-2">
           <input
             name="unidade"
             placeholder="Unidade (ex: un, m, kg)"
