@@ -43,6 +43,7 @@ export async function criarPedido(formData: FormData) {
   const canalPedidoId = formData.get('canalPedidoId') as string
   const prazoRaw = formData.get('prazo') as string
   const observacoes = formData.get('observacoes') as string
+  const endereco = formData.get('endereco') as string
 
   const pedido = await prisma.pedido.create({
     data: {
@@ -51,6 +52,7 @@ export async function criarPedido(formData: FormData) {
       canalPedidoId: canalPedidoId || null,
       prazo: prazoRaw ? new Date(prazoRaw) : null,  // converte string → Date
       observacoes: observacoes || null,
+      endereco: endereco || null,
     },
   })
 

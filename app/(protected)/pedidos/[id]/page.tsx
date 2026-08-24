@@ -97,6 +97,14 @@ export default async function DetalhePedidoPage({
           </form>
         </div>
 
+        {/* Endereço */}
+        {pedido.endereco && (
+          <div className="mt-3 pt-3 border-t border-zinc-100">
+            <p className="text-xs text-zinc-400 mb-0.5">Endereço de entrega</p>
+            <p className="text-sm text-zinc-600">{pedido.endereco}</p>
+          </div>
+        )}
+
         {/* Observações */}
         {pedido.observacoes && (
           <p className="mt-3 text-sm text-zinc-500 italic">

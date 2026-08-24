@@ -68,6 +68,7 @@ model Pedido {
   prazo         DateTime?
   pago          Boolean   @default(false)
   observacoes   String?
+  endereco      String?
   criadoEm     DateTime  @default(now())
   atualizadoEm DateTime  @updatedAt
 
