@@ -15,7 +15,9 @@
 6. Dashboard com métricas reais (pedidos por status, valor em aberto, não recebido, alertas)
 7. Campo `endereco` adicionado ao modelo `Pedido` via migration
 8. Resolução de problema de drift no banco (reset via SQL Editor do Supabase + `migrate deploy`)
-9. Três commits no GitHub
+9. Deploy no Vercel — sistema em produção acessível pelo celular
+10. Correção de três erros de build no Vercel (`earlyAccess`, `prisma generate`, layout responsivo)
+11. Seis commits no GitHub
 
 ---
 
@@ -136,6 +138,27 @@ Solução usada:
 ### IPv4 vs IPv6 no Supabase free tier
 O Supabase free tier só oferece conexão direta (`DIRECT_URL`) via IPv6. Máquinas com IPv4 (maioria das redes domésticas) não conseguem alcançar a porta 5432 diretamente — daí o erro `P1001`. A solução é usar `migrate deploy` que passa pelo pooler (IPv4 compatível), ou habilitar o IPv4 add-on (pago) no Supabase.
 
+### Deploy contínuo no Vercel
+O Vercel monitora o repositório GitHub. Todo `git push` na branch `main` dispara automaticamente um novo build e deploy em produção — sem precisar fazer nada manualmente. Isso se chama **CI/CD** (Continuous Integration / Continuous Deployment).
+
+### Erros de build no Vercel — o que aprendemos
+Três problemas encontrados e resolvidos:
+
+1. **`earlyAccess` faltando** — o `prisma.config.ts` precisava de `earlyAccess: true` para funcionar no ambiente de build do Vercel
+2. **`prisma generate` não rodava** — o Vercel não executa o postinstall do Prisma automaticamente; solução: adicionar `prisma generate &&` antes do `next build` no `package.json`
+3. **Layout quebrando no mobile** — `flex` sem `flex-col` no mobile fazia campos extravasarem a tela; solução: `flex-col sm:flex-row`
+
+### Design responsivo — mobile-first com Tailwind
+O Tailwind usa prefixos de breakpoint para sobrescrever estilos em telas maiores:
+```tsx
+// Mobile: coluna | Tablet+: linha
+<div className="flex flex-col sm:flex-row gap-2">
+```
+- Sem prefixo → vale para todos os tamanhos (mobile first)
+- `sm:` → aplica em telas ≥ 640px
+- `md:` → aplica em telas ≥ 768px
+- `lg:` → aplica em telas ≥ 1024px
+
 ### LF vs CRLF — aviso do Git no Windows
 Windows usa `CRLF` (dois caracteres) para quebrar linhas; Linux/Mac usam `LF` (um caractere). O aviso `LF will be replaced by CRLF` é o Git informando que vai converter automaticamente — não é um erro, não afeta o funcionamento.
 
@@ -158,11 +181,15 @@ dualle-sistema/
         │   ├── page.tsx                                   ← nome do cliente virou link
         │   └── [id]/
         │       └── page.tsx                               ← página de detalhe do cliente (nova)
+        ├── materias-primas/
+        │   └── page.tsx                                   ← flex-col sm:flex-row (responsivo)
         └── pedidos/
             ├── actions.ts                                 ← CRUD completo de pedidos
             ├── page.tsx                                   ← listagem + formulário de criação
             └── [id]/
                 └── page.tsx                               ← detalhe + itens + status + endereço
+package.json                                               ← prisma generate && next build
+prisma.config.ts                                           ← earlyAccess: true
 ```
 
 ---
@@ -180,10 +207,11 @@ dualle-sistema/
 
 ## ⏭️ O que vem na Sessão 07
 
-1. **Editar pedido** — poder corrigir canal, prazo, endereço e observações após criação
-2. **Consistência visual** — atualizar a tela de Clientes para o padrão visual de Pedidos/Dashboard
-3. **Produtos sem preço** — aviso visual na listagem de produtos sem `precoVenda`
-4. **`BotaoSubmit` compartilhado** — consolidar os três componentes idênticos em um só
+1. **Identidade visual Dualle** — aplicar paleta de cores da marca (rosa #E8638C, azul #4A6FA5, dourado #C9A84C) em botões, navegação e destaques
+2. **Editar pedido** — poder corrigir canal, prazo, endereço e observações após criação
+3. **Consistência visual** — atualizar a tela de Clientes para o padrão visual de Pedidos/Dashboard
+4. **Produtos sem preço** — aviso visual na listagem de produtos sem `precoVenda`
+5. **`BotaoSubmit` compartilhado** — consolidar os três componentes idênticos em um só
 
 ---
 
